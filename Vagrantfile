@@ -12,10 +12,10 @@ Vagrant.configure(2) do |config|
 
   # Configure proxy for the City's internal proxy
   if Vagrant.has_plugin?("vagrant-proxyconf")
-    config.proxy.http     = "http://alchave:!4en3msa@proxy1:80/"
-    config.proxy.https    = "http://alchave:!4en3msa@proxy1:80/"
+    config.proxy.http     = "http://alchave:!4en3msa@proxy1.ci.long-beach.ca.us:80/"
+    config.proxy.https    = "http://alchave:!4en3msa@proxy1.ci.long-beach.ca.us:80/"
     config.proxy.no_proxy = "localhost,127.0.0.1"
-    config.apt_proxy.http = "http://alchave:!4en3msa@proxy1:80/"
+    config.apt_proxy.http = "http://alchave:!4en3msa@proxy1.ci.long-beach.ca.us:80/"
     config.apt_proxy.https = "DIRECT"
   end
 
@@ -23,15 +23,13 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/trusty64"
 
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
-
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 27017, host: 27017
+  config.vm.network "forwarded_port", guest: 80, host: 8080     # Standard web port
+  config.vm.network "forwarded_port", guest: 3000, host: 3000   # Meteor default
+  config.vm.network "forwarded_port", guest: 27017, host: 27017 # MongoDB default
+  config.vm.network "forwarded_port", guest: 5432, host: 5432   # PostgreSQL default
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -46,28 +44,25 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
-
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
-  #
-  # View the documentation for the provider you are using for more
-  # information on available options.
+  config.vm.synced_folder "C://Users//alchave//Projects", "/home/vagrant/Projects"
 
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     sudo apt-get update
+    sudo apt-get install -y curl g++ git htop python-pip
+    sudo pip install django
+    mkdir /home/vagrant/Downloads
+    wget http://nodejs.org/dist/latest/node-v0.12.4-linux-x64.tar.gz -P /home/vagrant/Downloads
+    sudo tar -C /usr/local --strip-components 1 -xzf /home/vagrant/Downloads/node-v0.12.4-linux-x64.tar.gz
+    ls -l /usr/local/bin/node
+    ls -l /usr/local/bin/npm
+    sudo npm install -g bower yo
+    sudo apt-get install -y golang
+    sudo curl https://install.meteor.com/ | sh
+    sudo apt-get install -y postgresql postgresql-contrib
     sudo apt-get install -y mongodb
+    sudo pip install cubes[all] flask sqlalchemy
   SHELL
 end
