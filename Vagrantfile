@@ -44,7 +44,7 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "C://Users//alchave//Projects", "/home/vagrant/Projects"
+  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: [".meteor/local", "packages"]
 
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
