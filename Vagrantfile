@@ -12,10 +12,10 @@ Vagrant.configure(2) do |config|
 
   # Configure proxy for the City's internal proxy
   if Vagrant.has_plugin?("vagrant-proxyconf")
-    config.proxy.http     = "http://alchave:!4en3msa@proxy1.ci.long-beach.ca.us:80/"
-    config.proxy.https    = "http://alchave:!4en3msa@proxy1.ci.long-beach.ca.us:80/"
+    config.proxy.http     = "http://<YOUR_USERNAME_HERE>:<YOUR_PASSWORD_HERE>@proxy1.ci.long-beach.ca.us:80/"
+    config.proxy.https    = "http://<YOUR_USERNAME_HERE>:<YOUR_PASSWORD_HERE>@proxy1.ci.long-beach.ca.us:80/"
     config.proxy.no_proxy = "localhost,127.0.0.1"
-    config.apt_proxy.http = "http://alchave:!4en3msa@proxy1.ci.long-beach.ca.us:80/"
+    config.apt_proxy.http = "http://<YOUR_USERNAME_HERE>:<YOUR_PASSWORD_HERE>@proxy1.ci.long-beach.ca.us:80/"
     config.apt_proxy.https = "DIRECT"
   end
 
